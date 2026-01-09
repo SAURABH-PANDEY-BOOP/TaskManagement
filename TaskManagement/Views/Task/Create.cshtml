@@ -1,0 +1,102 @@
+﻿@model ModelLayer.TaskManagment.TaskModel
+
+@{
+    ViewData["Title"] = "Create Task";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Create New Task</h4>
+                </div>
+
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TaskTitle" class="form-label"></label>
+                                <input asp-for="TaskTitle" class="form-control" placeholder="Enter task title" />
+                                <span asp-validation-for="TaskTitle" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TaskStatus" class="form-label"></label>
+                                <select asp-for="TaskStatus" class="form-select">
+                                    <option value="">-- Select Status --</option>
+                                    <option value="Pending">Pending</option>
+                                    <option value="In Progress">In Progress</option>
+                                    <option value="Completed">Completed</option>
+                                </select>
+                                <span asp-validation-for="TaskStatus" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TaskDescription" class="form-label"></label>
+                            <textarea asp-for="TaskDescription" class="form-control" rows="3"
+                                      placeholder="Describe the task"></textarea>
+                            <span asp-validation-for="TaskDescription" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TaskDueDate" class="form-label"></label>
+                                <input asp-for="TaskDueDate" type="date" class="form-control" />
+                                <span asp-validation-for="TaskDueDate" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TaskRemarks" class="form-label"></label>
+                                <input asp-for="TaskRemarks" class="form-control"
+                                       placeholder="Optional remarks" />
+                                <span asp-validation-for="TaskRemarks" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <hr />
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="CreatedByName" class="form-label"></label>
+                                <input asp-for="CreatedByName" class="form-control"
+                                       placeholder="Created by" />
+                                <span asp-validation-for="CreatedByName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="UpdatedByName" class="form-label"></label>
+                                <input asp-for="UpdatedByName" class="form-control"
+                                       placeholder="Updated by" />
+                                <span asp-validation-for="UpdatedByName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-secondary">
+                                ← Back to List
+                            </a>
+
+                            <button type="submit" class="btn btn-success px-4">
+                                💾 Save Task
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

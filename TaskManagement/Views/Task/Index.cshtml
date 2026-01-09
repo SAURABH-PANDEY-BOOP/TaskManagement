@@ -1,0 +1,162 @@
+﻿@model IEnumerable<ModelLayer.TaskManagment.TaskModel>
+
+@{
+    ViewData["Title"] = "Tasks";
+}
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="row mb-3">
+        <div class="col-md-6">
+            <h2 class="fw-bold">Task List</h2>
+        </div>
+        <div class="col-md-6 text-end">
+            <a asp-action="Create" class="btn btn-success">
+                ➕ Create New
+            </a>
+        </div>
+    </div>
+
+    <!-- Search Box -->
+    <div class="card shadow-sm mb-3">
+        <div class="card-body">
+            <form asp-action="Index" method="get" class="row g-2">
+                <div class="col-md-8">
+                    <input type="text"
+                           name="searchText"
+                           value="@ViewData["CurrentFilter"]"
+                           class="form-control"
+                           placeholder="Search by Title, Status, Description..." />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        🔍 Search
+                    </button>
+                </div>
+                <div class="col-md-2">
+                    <a asp-action="Index" class="btn btn-secondary w-100">
+                        ❌ Clear
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Total Records & Page Info -->
+    <div class="row mb-2">
+        <div class="col-md-6">
+            <strong>Total Records:</strong> @ViewData["TotalRecords"]
+        </div>
+        <div class="col-md-6 text-end">
+            Page @ViewData["PageNumber"] of @ViewData["TotalPages"]
+        </div>
+    </div>
+
+    <!-- Task Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-orange">
+                <tr>
+                    <th>Title</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th>Remarks</th>
+                    <th>Created On</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model != null && Model.Any())
+                {
+                    foreach (var task in Model)
+                    {
+                        <tr>
+                            <td>@task.TaskTitle</td>
+                            <td>@task.TaskDueDate?.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <span class="badge bg-info text-dark">
+                                    @task.TaskStatus
+                                </span>
+                            </td>
+                            <td>@task.TaskRemarks</td>
+                            <td>@task.CreatedOn.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td class="text-center">
+                                <a asp-action="Edit"
+                                   asp-route-id="@task.TaskId"
+                                   class="btn btn-sm btn-warning me-1">
+                                    ✏️ Edit
+                                </a>
+                                <a asp-action="Delete"
+                                   asp-route-id="@task.TaskId"
+                                   class="btn btn-sm btn-danger"
+                                   onclick="return confirm('Are you sure you want to delete this task?');">
+                                    🗑️ Delete
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted">
+                            No records found
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Pagination -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            @if (ViewData["PageNumber"] != null)
+            {
+                int current = (int)ViewData["PageNumber"];
+                int total = (int)ViewData["TotalPages"];
+
+                <li class="page-item @(current == 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(current - 1)"
+                       asp-route-searchText="@ViewData["CurrentFilter"]">
+                        Previous
+                    </a>
+                </li>
+
+                @for (int i = 1; i <= total; i++)
+                {
+                    <li class="page-item @(i == current ? "active" : "")">
+                        <a class="page-link"
+                           asp-action="Index"
+                           asp-route-pageNumber="@i"
+                           asp-route-searchText="@ViewData["CurrentFilter"]">
+                            @i
+                        </a>
+                    </li>
+                }
+
+                <li class="page-item @(current == total ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-pageNumber="@(current + 1)"
+                       asp-route-searchText="@ViewData["CurrentFilter"]">
+                        Next
+                    </a>
+                </li>
+            }
+        </ul>
+    </nav>
+
+</div>
+
+<!-- Orange Header Style -->
+<style>
+    .table-orange th {
+        background-color: #fd7e14;
+        color: white;
+        border-color: #fd7e14;
+    }
+</style>
